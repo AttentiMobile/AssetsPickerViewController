@@ -30,9 +30,8 @@ open class AssetsAlbumViewController: UIViewController {
     let headerReuseIdentifier: String = UUID().uuidString
     
     lazy var cancelButtonItem: UIBarButtonItem = {
-        let buttonItem = UIBarButtonItem(barButtonSystemItem: .cancel,
-                                         target: self,
-                                         action: #selector(pressedCancel(button:)))
+        let buttonItem = UIBarButtonItem(title: String(key: "Back"), style: .plain, target: self, action: #selector(pressedCancel(button:))
+        
         return buttonItem
     }()
     
