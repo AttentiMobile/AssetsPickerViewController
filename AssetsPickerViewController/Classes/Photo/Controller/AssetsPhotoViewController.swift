@@ -29,10 +29,9 @@ open class AssetsPhotoViewController: UIViewController {
     fileprivate var requestIdMap = [IndexPath: PHImageRequestID]()
     
     fileprivate lazy var cancelButtonItem: UIBarButtonItem = {
-         //let buttonItem = UIBarButtonItem(title: String(key: "Back"), style: .plain, target: self, action: #selector(pressedCancel(button:)))
-        
-        let buttonItem = UIBarButtonItem(barButtonSystemItem: .Back, target: self, action: #selector(pressedCancel(button:)))
-        
+        let buttonItem = UIBarButtonItem(barButtonSystemItem: .cancel,
+                                         target: self,
+                                         action: #selector(pressedCancel(button:)))
         return buttonItem
     }()
     fileprivate lazy var doneButtonItem: UIBarButtonItem = {
