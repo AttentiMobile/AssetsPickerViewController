@@ -241,6 +241,9 @@ extension AssetsPhotoViewController {
     
     func setupBarButtonItems() {
         navigationItem.leftBarButtonItem = cancelButtonItem
+        navigationItem.leftBarButtonItem?.tintColor = #colorLiteral(red: 0.1607843137, green: 0.1843137255, blue: 0.2039215686, alpha: 1)
+        navigationItem.leftBarButtonItem?.accessibilityIdentifier = "btn_action_bar_back"
+
         navigationItem.rightBarButtonItem = doneButtonItem
         doneButtonItem.isEnabled = false
     }
