@@ -239,7 +239,7 @@ extension AssetsPhotoViewController {
     }
     
     func setupBarButtonItems() {
-        navigationItem.leftBarButtonItem = nil // cancelButtonItem
+        navigationItem.leftBarButtonItem = cancelButtonItem
         navigationItem.rightBarButtonItem = doneButtonItem
         doneButtonItem.isEnabled = false
     }
