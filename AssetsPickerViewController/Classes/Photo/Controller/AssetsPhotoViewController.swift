@@ -301,6 +301,23 @@ extension AssetsPhotoViewController {
         }
     }
     
+    open func setupAssetsByRows(rows:[Int]){
+        if AssetsManager.shared.assetArray.count > 0 {
+            self.deselectAll()
+            for row in rows {
+                let indexPath = IndexPath(row: row, section: 0)
+                if AssetsManager.shared.assetArray.count > indexPath.row {
+                    let asset = AssetsManager.shared.assetArray[indexPath.row]
+                    select(asset: asset, at: indexPath)
+                    self.collectionView.selectItem(at: indexPath, animated: false, scrollPosition: UICollectionView.ScrollPosition(rawValue: 0))
+                    self.delegate?.assetsPicker?(controller: self.picker, didSelect: asset, at: indexPath)
+                }
+            }
+            self.updateSelectionCount()
+            updateNavigationStatus()
+        }
+    }
+    
     func setupGestureRecognizer() {
         if let _ = self.tapGesture {
             // ignore
