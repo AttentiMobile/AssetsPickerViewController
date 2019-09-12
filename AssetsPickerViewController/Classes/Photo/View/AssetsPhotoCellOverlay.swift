@@ -28,6 +28,7 @@ open class AssetsPhotoCellOverlay: UIView {
     
     let checkmark: SSCheckMark = {
         let view = SSCheckMark()
+        view.accessibilityIdentifier = "photo_check_mark"
         return view
     }()
     

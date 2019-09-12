@@ -137,6 +137,13 @@ open class AssetsPhotoViewController: UIViewController {
         }
     }
     
+    func setNavigationTitle(title: String) {
+        let titleLabel = UILabel()
+        titleLabel.text = title
+        titleLabel.accessibilityIdentifier = "action_bar_title"
+        self.navigationItem.titleView = titleLabel
+    }
+    
     override open func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
         if let previewing = self.previewing {
@@ -282,6 +289,7 @@ extension AssetsPhotoViewController {
             
             self.updateEmptyView(count: photos.count)
             self.title = self.title(forAlbum: manager.selectedAlbum)
+            self.setNavigationTitle(title: self.title(forAlbum: manager.selectedAlbum))
             
             if self.selectedArray.count > 0 {
                 self.collectionView.performBatchUpdates({ [weak self] in
@@ -387,6 +395,7 @@ extension AssetsPhotoViewController {
                 updateNavigationStatus()
             } else {
                 title = title(forAlbum: album)
+                setNavigationTitle(title: title(forAlbum: album))
             }
             collectionView.reloadData()
             
@@ -485,6 +494,7 @@ extension AssetsPhotoViewController {
             }
         }
         title = titleString
+        setNavigationTitle(title: titleString)
     }
     
     func updateFooter() {
