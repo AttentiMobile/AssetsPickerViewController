@@ -11,14 +11,17 @@ import Foundation
 extension String {
     
     init(key: String) {
-        guard
-            let customConfig = AssetsPickerConfig.customStringConfig,
-            let localizedKey = AssetsPickerLocalizedStringKey(rawValue: key),
-            let string = customConfig[localizedKey] else {
-                self = Bundle.assetsPickerBundle.localizedString(forKey: key, value: key, table:  "AssetsPickerViewController")
-                return
+        if key != NSLocalizedString(key, comment: "") {
+            self = NSLocalizedString(key, comment: "")
         }
-        self = string
+        else if let customConfig = AssetsPickerConfig.customStringConfig,
+            let localizedKey = AssetsPickerLocalizedStringKey(rawValue: key),
+            let string = customConfig[localizedKey]{
+            self = string
+        }
+        else {
+            self = Bundle.assetsPickerBundle.localizedString(forKey: key, value: key, table:  "AssetsPickerViewController")
+        }
     }
 
     init(duration: TimeInterval) {
