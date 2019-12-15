@@ -34,7 +34,8 @@ open class AssetsPhotoViewController: UIViewController {
         return buttonItem
     }()
     fileprivate lazy var doneButtonItem: UIBarButtonItem = {
-        let buttonItem = UIBarButtonItem.init(barButtonSystemItem: .done,
+        let buttonItem = UIBarButtonItem.init(title: "Done",
+                                              style: .done,
                                               target: self,
                                               action: #selector(pressedDone(button:)))
         return buttonItem
@@ -137,7 +138,7 @@ open class AssetsPhotoViewController: UIViewController {
         }
     }
     
-    func setNavigationTitle(title: String) {
+    open func setNavigationTitle(title: String) {
         let titleLabel = UILabel()
         titleLabel.text = title
         titleLabel.accessibilityIdentifier = "action_bar_title"
@@ -250,7 +251,8 @@ extension AssetsPhotoViewController {
         navigationItem.leftBarButtonItem = cancelButtonItem
         navigationItem.leftBarButtonItem?.tintColor = #colorLiteral(red: 0.1607843137, green: 0.1843137255, blue: 0.2039215686, alpha: 1)
         navigationItem.leftBarButtonItem?.accessibilityIdentifier = "btn_action_bar_back"
-
+        
+        self.delegate?.assetsPicker?(controller: self.picker, updateTitle: doneButtonItem)
         navigationItem.rightBarButtonItem = doneButtonItem
         doneButtonItem.isEnabled = false
     }
@@ -288,8 +290,7 @@ extension AssetsPhotoViewController {
             guard let `self` = self else { return }
             
             self.updateEmptyView(count: photos.count)
-            self.title = self.title(forAlbum: manager.selectedAlbum)
-            self.setNavigationTitle(title: self.title(forAlbum: manager.selectedAlbum))
+            self.delegate?.assetsPicker?(controller: self.picker, updateTitleWith: self.title(forAlbum: manager.selectedAlbum), parameters: [])
             
             if self.selectedArray.count > 0 {
                 self.collectionView.performBatchUpdates({ [weak self] in
@@ -394,8 +395,7 @@ extension AssetsPhotoViewController {
             if selectedArray.count > 0 {
                 updateNavigationStatus()
             } else {
-                title = title(forAlbum: album)
-                setNavigationTitle(title: title(forAlbum: album))
+                self.delegate?.assetsPicker?(controller: self.picker, updateTitleWith: title(forAlbum: album), parameters: [])
             }
             collectionView.reloadData()
             
@@ -474,27 +474,31 @@ extension AssetsPhotoViewController {
         let imageCount = counts.imageCount
         let videoCount = counts.videoCount
         
-        var titleString: String = title(forAlbum: AssetsManager.shared.selectedAlbum)
+        var key:String = title(forAlbum: AssetsManager.shared.selectedAlbum)
+        var parameters:[Int] = []
         
         if imageCount > 0 && videoCount > 0 {
-            titleString = String(format: String(key: "Title_Selected_Items"), NumberFormatter.decimalString(value: imageCount + videoCount))
+            key = "Title_Selected_Items"
+            parameters = [imageCount + videoCount]
         } else {
             if imageCount > 0 {
                 if imageCount > 1 {
-                    titleString = String(format: String(key: "Title_Selected_Photos"), NumberFormatter.decimalString(value: imageCount))
+                    key = "Title_Selected_Photos"
                 } else {
-                    titleString = String(format: String(key: "Title_Selected_Photo"), NumberFormatter.decimalString(value: imageCount))
+                    key = "Title_Selected_Photo"
                 }
+                parameters = [imageCount]
             } else if videoCount > 0 {
                 if videoCount > 1 {
-                    titleString = String(format: String(key: "Title_Selected_Videos"), NumberFormatter.decimalString(value: videoCount))
+                    key = "Title_Selected_Videos"
                 } else {
-                    titleString = String(format: String(key: "Title_Selected_Video"), NumberFormatter.decimalString(value: videoCount))
+                    key = "Title_Selected_Videos"
                 }
+                parameters = [videoCount]
+                
             }
         }
-        title = titleString
-        setNavigationTitle(title: titleString)
+        self.delegate?.assetsPicker?(controller: self.picker, updateTitleWith: key, parameters: parameters)
     }
     
     func updateFooter() {
@@ -569,7 +573,7 @@ extension AssetsPhotoViewController: UIScrollViewDelegate {
 
 // MARK: - UICollectionViewDelegate
 extension AssetsPhotoViewController: UICollectionViewDelegate {
-
+    
     public func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
         if let delegate = self.delegate {
             return delegate.assetsPicker?(controller: picker, shouldSelect: AssetsManager.shared.assetArray[indexPath.row], at: indexPath) ?? true
